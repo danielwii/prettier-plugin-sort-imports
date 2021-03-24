@@ -9,7 +9,6 @@
   },
   "homepage": "https://github.com/trivago/prettier-plugin-sort-imports#readme",
   "scripts": {
-    "postinstall": "tsc",
     "compile": "tsc",
     "example": "prettier --config .prettierrc --plugin lib/src/index.js",
     "test": "jest -i",
