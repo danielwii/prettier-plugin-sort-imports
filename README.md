@@ -2,6 +2,9 @@
 
 A prettier plugin to sort import declarations by provided RegEx order.
 
+### Changes
+move type imports to the last in typescript files
+
 ### Input
 ![input](./public/images/input.png)
 

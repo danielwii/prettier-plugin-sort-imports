@@ -27,6 +27,8 @@ export const getSortedNodes = (
     importOrderSeparation: boolean,
 ) => {
     const originalNodes = nodes.map(clone);
+    const sortedTypeNodes = originalNodes.filter((node) => node.importKind === 'type');
+    const normalTypeNodes = originalNodes.filter((node) => node.importKind !== 'type');
     const newLine =
         importOrderSeparation && nodes.length > 1 ? newLineNode : null;
     const sortedNodesByImportOrder = order.reduce(
@@ -34,12 +36,12 @@ export const getSortedNodes = (
             res: (ImportDeclaration | ExpressionStatement)[],
             val,
         ): (ImportDeclaration | ExpressionStatement)[] => {
-            const x = originalNodes.filter(
+            const x = normalTypeNodes.filter(
                 (node) => node.source.value.match(new RegExp(val)) !== null,
             );
 
             // remove "found" imports from the list of nodes
-            pull(originalNodes, ...x);
+            pull(normalTypeNodes, ...x);
 
             if (x.length > 0) {
                 x.sort((a, b) => naturalSort(a.source.value, b.source.value));
@@ -54,7 +56,7 @@ export const getSortedNodes = (
         [],
     );
 
-    const sortedNodesNotInImportOrder = originalNodes.filter(
+    const sortedNodesNotInImportOrder = normalTypeNodes.filter(
         (node) => !isSimilarTextExistInArray(order, node.source.value),
     );
 
@@ -70,6 +72,8 @@ export const getSortedNodes = (
         shouldAddNewLineInBetween ? newLineNode : null,
         ...sortedNodesByImportOrder,
         newLineNode, // insert a newline after all sorted imports
+        ...sortedTypeNodes,
+        sortedTypeNodes ? newLineNode : null,
     ]);
 
     // maintain a copy of the nodes to extract comments from
