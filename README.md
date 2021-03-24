@@ -7,6 +7,9 @@ A prettier plugin to sort import declarations by provided Regular Expression ord
 
 **Note: If you are migrating from v2.x.x to v3.x.x, [Please Read Migration Guidelines](./docs/MIGRATION.md)**
 
+### Changes
+move type imports to the last in typescript files
+
 ### Input
 ![input](./public/images/input-v3-1.png)
 
