@@ -6,5 +6,7 @@ import-sort.gif
 jest.config.js
 yarn.lock
 .github/
+src/
 tests/
 examples/
+tsconfig.json
