@@ -1,17 +1,12 @@
 // we do not have types for javascript-natural-sort
 //@ts-ignore
 import naturalSort from 'javascript-natural-sort';
-import { compact, isEqual, pull, clone } from 'lodash';
+import { clone, compact, isEqual, pull } from 'lodash';
 
-import {
-    ImportDeclaration,
-    ExpressionStatement,
-    addComments,
-    removeComments,
-} from '@babel/types';
+import { addComments, ExpressionStatement, ImportDeclaration, removeComments } from '@babel/types';
 
 import { isSimilarTextExistInArray } from './is-similar-text-in-array';
-import { PrettierOptions } from '../types';
+import type { PrettierOptions } from '../types';
 import { newLineNode } from '../constants';
 
 /**
@@ -29,16 +24,10 @@ export const getSortedNodes = (
     const originalNodes = nodes.map(clone);
     const sortedTypeNodes = originalNodes.filter((node) => node.importKind === 'type');
     const normalTypeNodes = originalNodes.filter((node) => node.importKind !== 'type');
-    const newLine =
-        importOrderSeparation && nodes.length > 1 ? newLineNode : null;
+    const newLine = importOrderSeparation && nodes.length > 1 ? newLineNode : null;
     const sortedNodesByImportOrder = order.reduce(
-        (
-            res: (ImportDeclaration | ExpressionStatement)[],
-            val,
-        ): (ImportDeclaration | ExpressionStatement)[] => {
-            const x = normalTypeNodes.filter(
-                (node) => node.source.value.match(new RegExp(val)) !== null,
-            );
+        (res: (ImportDeclaration | ExpressionStatement)[], val): (ImportDeclaration | ExpressionStatement)[] => {
+            const x = normalTypeNodes.filter((node) => node.source.value.match(new RegExp(val)) !== null);
 
             // remove "found" imports from the list of nodes
             pull(normalTypeNodes, ...x);
@@ -60,12 +49,9 @@ export const getSortedNodes = (
         (node) => !isSimilarTextExistInArray(order, node.source.value),
     );
 
-    sortedNodesNotInImportOrder.sort((a, b) =>
-        naturalSort(a.source.value, b.source.value),
-    );
+    sortedNodesNotInImportOrder.sort((a, b) => naturalSort(a.source.value, b.source.value));
 
-    const shouldAddNewLineInBetween =
-        sortedNodesNotInImportOrder.length > 0 && importOrderSeparation;
+    const shouldAddNewLineInBetween = sortedNodesNotInImportOrder.length > 0 && importOrderSeparation;
 
     const allSortedNodes = compact([
         ...sortedNodesNotInImportOrder,
@@ -87,11 +73,7 @@ export const getSortedNodes = (
     // insert comments other than the first comments
     allSortedNodes.forEach((node, index) => {
         if (!isEqual(nodes[0].loc, node.loc)) {
-            addComments(
-                node,
-                'leading',
-                sortedNodesClone[index].leadingComments || [],
-            );
+            addComments(node, 'leading', sortedNodesClone[index].leadingComments || []);
         }
     });
 

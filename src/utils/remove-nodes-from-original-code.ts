@@ -1,10 +1,4 @@
-import {
-    ImportDeclaration,
-    Statement,
-    CommentBlock,
-    CommentLine,
-    InterpreterDirective,
-} from '@babel/types';
+import type { ImportDeclaration, Statement, CommentBlock, CommentLine, InterpreterDirective } from '@babel/types';
 
 /** Escapes a string literal to be passed to new RegExp. See: https://stackoverflow.com/a/6969486/480608.
  * @param s the string to escape
@@ -18,13 +12,7 @@ const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
  */
 export const removeNodesFromOriginalCode = (
     code: string,
-    nodes: (
-        | Statement
-        | CommentBlock
-        | CommentLine
-        | ImportDeclaration
-        | InterpreterDirective
-    )[],
+    nodes: (Statement | CommentBlock | CommentLine | ImportDeclaration | InterpreterDirective)[],
 ) => {
     let text = code;
     for (const node of nodes) {

@@ -10,23 +10,12 @@ import { newLineCharacters } from '../constants';
  * @param nodes all imports
  * @param originalCode
  */
-export const getCodeFromAst = (
-    nodes: Statement[],
-    originalCode: string,
-    interpreter?: InterpreterDirective | null,
-) => {
+export const getCodeFromAst = (nodes: Statement[], originalCode: string, interpreter?: InterpreterDirective | null) => {
     const allCommentsFromImports = getAllCommentsFromNodes(nodes);
 
-    const nodesToRemoveFromCode = [
-        ...nodes,
-        ...allCommentsFromImports,
-        ...(interpreter ? [interpreter] : []),
-    ];
+    const nodesToRemoveFromCode = [...nodes, ...allCommentsFromImports, ...(interpreter ? [interpreter] : [])];
 
-    const codeWithoutImportsAndInterpreter = removeNodesFromOriginalCode(
-        originalCode,
-        nodesToRemoveFromCode,
-    );
+    const codeWithoutImportsAndInterpreter = removeNodesFromOriginalCode(originalCode, nodesToRemoveFromCode);
 
     const newAST = file({
         type: 'Program',
@@ -49,9 +38,7 @@ export const getCodeFromAst = (
     const { code } = generate(newAST);
 
     return (
-        code.replace(
-            /"PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE";/gi,
-            newLineCharacters,
-        ) + codeWithoutImportsAndInterpreter.trim()
+        code.replace(/"PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE";/gi, newLineCharacters) +
+        codeWithoutImportsAndInterpreter.trim()
     );
 };
